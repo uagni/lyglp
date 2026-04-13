@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>卢远光&梁萍的专属惊喜</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: '微软雅黑', sans-serif; background: #000; margin: 0; padding: 0; }
+        .tip-popup { 
+            position: fixed; 
+            padding: 20px; 
+            border-radius: 10px; 
+            font-size: 16px; 
+            color: #333; 
+            box-shadow: 0 4px 12px rgba(255,255,255,0.15); 
+            z-index: 9999; 
+            cursor: pointer; 
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+
+        /* 隐藏音频播放器 */
+        .audio-player {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- 隐藏的背景音乐 -->
+    <div class="audio-player">
+        <audio id="bgMusic" src="file:///D:/lpddx/徐佳莹 - 不舍 (伴奏).mp3" preload="auto">
+            您的浏览器不支持音频播放
+        
+    </div>
+
+    <script>
+        const tipList = [
+            '多喝水哦~', '保持微笑呀', '每天都要元气满满', '卢远光喜欢梁萍了',
+            '记得吃水果', '保持好心情', '梁萍要好好爱自己', '梁萍我好想你',
+            '梦想成真', '我期待下次见面', '顺顺利利', '梁萍早点休息',
+            '愿所有烦恼都消失', '别熬夜', '今天过的开心嘛','梁萍天天开心',
+            '宝宝天冷了多穿衣服', '梁萍今天有没有想我呀','我要一直和梁萍在一起','LOVE'
+        ];
+        const bgColors = [
+            'lightpink', 'skyblue', 'lightgreen', 'lavender',
+            'lightyellow', 'plum', 'coral', 'bisque',
+            'aquamarine', 'mistyrose', 'honeydew', 'lavenderblush', 'oldlace'
+        ];
+        const popups = [];
+
+        // 背景音乐自动播放（点击页面任意位置触发一次）
+        const audio = document.getElementById('bgMusic');
+        document.addEventListener('click', () => {
+            audio.play().catch(err => console.log('播放被限制', err));
+        }, { once: true });
+
+        function createTipPopup() {
+            const popup = document.createElement('div');
+            popup.className = 'tip-popup';
+            popup.innerText = tipList[Math.floor(Math.random() * tipList.length)];
+            popup.style.background = bgColors[Math.floor(Math.random() * bgColors.length)];
+            const screenWidth = window.innerWidth - 200;
+            const screenHeight = window.innerHeight - 100;
+            popup.style.left = `${Math.floor(Math.random() * screenWidth)}px`;
+            popup.style.top = `${Math.floor(Math.random() * screenHeight)}px`;
+            
+            popup.onclick = () => {
+                popup.remove();
+                const index = popups.indexOf(popup);
+                if (index !== -1) popups.splice(index, 1);
+            };
+            document.body.appendChild(popup);
+            popups.push(popup);
+        }
+
+        let count = 0;
+        const popupInterval = setInterval(() => {
+            if (count < 300) {
+                createTipPopup();
+                count++;
+            } else {
+                clearInterval(popupInterval);
+            }
+        }, 50);
+
+        // 按空格键关闭所有弹窗
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                popups.forEach(popup => popup.remove());
+                popups.length = 0;
+            }
+        });
+    </script>
+</body>
+</html>
